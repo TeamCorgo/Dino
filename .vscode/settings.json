@@ -5,7 +5,7 @@
         "**/__pycache__": true,
         "**/.mypy_cache": true,
         "**/.ruff_cache": true,
-        "**/*.code-workspace": true,
+        //"**/*.code-workspace": true,
     },
     "search.exclude": {
         "**/.venv": true,

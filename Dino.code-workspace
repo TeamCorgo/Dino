@@ -4,11 +4,4 @@
 			"path": "."
 		}
 	],
-	"settings": {
-		"files.exclude": {},
-		"editor.fontSize": 18,
-		"editor.rulers": [
-			88
-		]
-	}
 }
