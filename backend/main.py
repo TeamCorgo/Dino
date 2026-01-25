@@ -14,11 +14,8 @@ app = FastAPI(
         "email": "Hunter.Salazar@bon.nm.gov",
     },
 )
-app.add_event_handler("startup", lambda: startup(app))
-app.add_event_handler("shutdown", lambda: shutdown(app))
-app.state.USERS = {}
-app.state.THEME = {}
-app.state.CONFIG = {"seed": "49db74f7-3662-46ab-a33a-9d355439fe0b"}
+app.add_event_handler("startup", startup)
+app.add_event_handler("shutdown", shutdown)
 
 
 @app.get("/", include_in_schema=False)

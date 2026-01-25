@@ -1,18 +1,18 @@
 from account.helpers import gen_user
-from fastapi import FastAPI
+from tools.state import state
 
 
-def startup(app: FastAPI) -> None:
+def startup() -> None:
     print("⚙️ Startup")
-    app.state.USERS["Hunter"] = gen_user("Hunter")
-    app.state.USERS["Hunter"]["token"] = "asd"
-    print(app.state.USERS)
+    state.users["Hunter"] = gen_user("Hunter")
+    state.users["Hunter"].token = "asd"
+    print(state.users)
 
-    app.state.THEME[0] = ["#000000", "#FFFFFF"]
-    print(app.state.THEME)
+    state.themes[0] = ["#000000", "#FFFFFF"]
+    print(state.themes)
     return
 
 
-def shutdown(app: FastAPI) -> None:
+def shutdown() -> None:
     print("⚙️ Shutdown")
     return

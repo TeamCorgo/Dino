@@ -3,6 +3,8 @@ import re
 import secrets
 from datetime import datetime
 
+from tools.state import Cell, state
+
 
 # Generate a random token
 def generate_token() -> str:
@@ -18,6 +20,12 @@ def username_shield(username: str) -> bool:
     return regex.match(username)
 
 
-def gen_color(seed: str, theme: list, x: int, y: int, z: int) -> str:
-    rng = random.Random(seed + ":" + str(x) + ":" + str(y) + ":" + str(z))
-    return rng.choice(theme)
+def gen_cord(x: int, y: int, z: int) -> str:
+    return f"{str(x)}:{str(y)}:{str(z)}"
+
+
+def gen_color(x: int, y: int, z: int) -> None:
+    rng = random.Random(state.seed + ":" + gen_cord(x, y, z))
+    cell = Cell(color=rng.choice(state.themes[z]))
+    state.worlds[gen_cord(x, y, z)] = cell
+    return
