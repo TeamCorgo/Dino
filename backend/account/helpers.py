@@ -8,30 +8,28 @@ def get_user(
     request: Request,
     credentials: HTTPAuthorizationCredentials = Depends(HTTPBearer()),
 ) -> dict:
-    token = credentials.credentials
-    # Access app.state.USERS via request
-    users = request.app.state.USERS
-    # Find user by token
-    user = next((u for u, v in users.items() if v["token"] == token), None)
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token"
-        )
-    return {"user": user}
+    access_token = credentials.credentials
 
+    # Access stored users from app state
+    users_by_username = request.app.state.USERS
 
-def read_user(username: str, request: Request) -> dict:
-    users = request.app.state.USERS
-    print()
-    print(users)
-    print(username)
-    print(users[username])
-    print()
-    if username not in users:
+    # Find the username that matches the provided token
+    username = next(
+        (
+            username
+            for username, user_data in users_by_username.items()
+            if user_data["token"] == access_token
+        ),
+        None,
+    )
+
+    if username is None:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid token",
         )
-    return users[username]
+    return request.app.state.USERS[username]
+    # return {"user": username}
 
 
 def gen_user(username: str) -> dict:

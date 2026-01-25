@@ -1,43 +1,52 @@
-from account.helpers import get_user, read_user
+from account.helpers import get_user
 from fastapi import APIRouter, Depends, Request
-from tools.util import gen_color
-from tools.world import user_view
+
+from backend.world.helpers import user_view
 
 action_router = APIRouter()
 
 
 @action_router.post("/move_north")
 def move_north(user: dict = Depends(get_user), request: Request = None) -> dict:
-    request.app.state.USERS[user["user"]]["y"] += 1
-    return {
-        "message": "Moved north",
-    }
+    user["y"] += 1
+    view = user_view(
+        seed=request.app.state.CONFIG["seed"],
+        theme=request.app.state.THEME[user["z"]],
+        x=user["x"],
+        y=user["y"],
+        z=user["z"],
+    )
+    return {"message": "Moved north", "view": view}
 
 
 @action_router.post("/move_south")
 def move_south(user: dict = Depends(get_user), request: Request = None) -> dict:
-    request.app.state.USERS[user["user"]]["y"] -= 1
-    return {
-        "message": "Moved south",
-    }
+    user["y"] -= 1
+    view = user_view(
+        seed=request.app.state.CONFIG["seed"],
+        theme=request.app.state.THEME[user["z"]],
+        x=user["x"],
+        y=user["y"],
+        z=user["z"],
+    )
+    return {"message": "Moved south", "view": view}
 
 
 @action_router.post("/move_east")
 def move_east(user: dict = Depends(get_user), request: Request = None) -> dict:
-    request.app.state.USERS[user["user"]]["x"] += 1
-    color = gen_color(
+    user["x"] += 1
+    view = user_view(
         seed=request.app.state.CONFIG["seed"],
-        theme=request.app.state.THEME[request.app.state.USERS[user["user"]]["z"]],
-        x=request.app.state.USERS[user["user"]]["x"],
-        y=request.app.state.USERS[user["user"]]["y"],
-        z=request.app.state.USERS[user["user"]]["z"],
+        theme=request.app.state.THEME[user["z"]],
+        x=user["x"],
+        y=user["y"],
+        z=user["z"],
     )
-    return {"message": "Moved east", "color": color}
+    return {"message": "Moved east", "view": view}
 
 
 @action_router.post("/move_west")
-def move_west(username: dict = Depends(get_user), request: Request = None) -> dict:
-    user = read_user(username["user"], request)
+def move_west(user: dict = Depends(get_user), request: Request = None) -> dict:
     user["x"] -= 1
     view = user_view(
         seed=request.app.state.CONFIG["seed"],
