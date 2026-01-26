@@ -1,7 +1,13 @@
+import secrets
+
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from tools.state import User, state
-from tools.util import generate_token
+
+
+# Generate a random token
+def generate_token() -> str:
+    return secrets.token_hex(16)  # 32-character hex token
 
 
 # Validate token and return the spesific user
@@ -10,20 +16,21 @@ def get_user(
 ) -> User:
     access_token = credentials.credentials
 
-    # Find the user that matches the provided token
-    user = next(
-        (user for user in state.users.values() if user.token == access_token),
+    # Find the username that matches the provided token
+    username = next(
+        (user for user, token in state.tokens.items() if token == access_token),
         None,
     )
 
-    if user is None:
+    if username is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid token",
         )
 
-    return user
+    return state.users[username]
 
 
 def gen_user(username: str) -> User:
-    return User(username=username, token=generate_token())
+    state.tokens[username] = generate_token()
+    return User(username=username)

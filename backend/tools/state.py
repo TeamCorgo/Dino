@@ -2,9 +2,8 @@ from datetime import datetime
 
 
 class User:
-    def __init__(self, username: str, token: str):
+    def __init__(self, username: str):
         self.username = username
-        self.token = token
         self.created = datetime.now().strftime("%Y.%m.%d %H:%M")
         self.x = 0
         self.y = 0
@@ -23,6 +22,7 @@ class AppState:
         self.worlds = {}
         self.themes = {}
         self.seed = "49db74f7-3662-46ab-a33a-9d355439fe0b"
+        self.tokens = {}
 
 
 state = AppState()

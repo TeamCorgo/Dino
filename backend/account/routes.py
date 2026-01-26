@@ -33,4 +33,5 @@ def register(username: str) -> dict:
 
     state.users[username] = gen_user(username)
     print(state.users)
-    return {"token": state.users[username].token}
+    print(state.tokens)
+    return {"token": state.tokens[username]}

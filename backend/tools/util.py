@@ -1,14 +1,8 @@
 import random
 import re
-import secrets
 from datetime import datetime
 
 from tools.state import Cell, state
-
-
-# Generate a random token
-def generate_token() -> str:
-    return secrets.token_hex(16)  # 32-character hex token
 
 
 def datetime_now() -> str:
