@@ -1,4 +1,4 @@
-from account.helpers import gen_user, get_user
+from account.helpers import gen_user, generate_token, get_user
 from fastapi import APIRouter, Depends, HTTPException, status
 from tools.state import User, state
 from tools.util import username_shield
@@ -11,6 +11,15 @@ def protected_route(user: User = Depends(get_user)) -> dict:
     return {
         "message": f"Hello {user.username}, you have accessed a protected route!",
     }
+
+
+@account_router.post("/regenerate")
+def regenerate(user: User = Depends(get_user)) -> dict:
+    print(state.tokens)
+    state.tokens[user.username] = generate_token()
+
+    print(state.tokens)
+    return {"token": state.tokens[user.username]}
 
 
 # Registration route
